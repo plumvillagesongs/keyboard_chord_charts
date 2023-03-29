@@ -6,15 +6,16 @@ import 'package:flutter/material.dart';
 class KeyboardChordChart extends StatelessWidget {
   final List<Color?> colors;
   final Color defaultColor;
+  final String? pitchNotes;
 
   /// Builds a keyboard chord chart with the given colors.
   /// The list of colors has to be of length 24.
-  const KeyboardChordChart.fromColors(this.colors, this.defaultColor, {Key? key})
+  const KeyboardChordChart.fromColors(this.colors, this.defaultColor, String? this.pitchNotes, {Key? key})
       : assert(colors.length == 24),
         super(key: key);
 
   KeyboardChordChart.fromNoteIndexes(Set<int> noteIndexes,
-      {Color highlightColor = Colors.blue,Color defaultColor = Colors.transparent, Key? key})
+      {Color highlightColor = Colors.blue, Color defaultColor = Colors.transparent, String? pitchNotes = '', Key? key})
       : this.fromColors(
             List.generate(
                     24,
@@ -22,6 +23,7 @@ class KeyboardChordChart extends StatelessWidget {
                         noteIndexes.contains(index) ? highlightColor : null)
                 .toList(),
             defaultColor,
+            pitchNotes,
             key: key);
 
   @override
@@ -30,11 +32,17 @@ class KeyboardChordChart extends StatelessWidget {
       double ratio = 0.5;
       double maxWidth =
           min(constraints.maxWidth, constraints.maxHeight * 168 / 50) * ratio;
-      return CustomPaint(
-        size: Size(maxWidth, maxWidth * 50 / 168),
-        painter: _KeyboardPainter(colors, defaultColor),
+      return Column(
+          children: <Widget>[
+            Text(pitchNotes!),
+            CustomPaint(
+              size: Size(maxWidth, maxWidth * 50 / 168),
+              painter: _KeyboardPainter(colors, defaultColor),
+            )
+          ]
       );
-    });
+    }
+    );
   }
 }
 
